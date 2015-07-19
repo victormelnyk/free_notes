@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scopia Web Client</title>
+  <meta charset="UTF-8">
+  <!-- libs -->
+  <!-- include: "type": "css", "files": "libs/bootstrap/css/bootstrap.*css" -->
+
+  <!-- include: "type": "css", "files": "libs/bootstrap-material-design/css/material.min.css" -->
+  <!-- include: "type": "css", "files": "libs/bootstrap-material-design/css/material-fullpalette.min.css" -->
+  <!-- include: "type": "css", "files": "libs/bootstrap-material-design/css/material-wfont.min.css" -->
+  <!-- include: "type": "css", "files": "libs/bootstrap-material-design/css/ripples.min.css" -->
+
+  <!-- src -->
+  <!-- include: "type": "css", "files": ["**/*.css", "!libs/**/*"] -->
+</head>
+<body
+  ng-app="appModule"
+  ng-controller="AppController as app"
+>
+  <div class="container">
+    <h1>Free Notes</h1>
+    <div class="form-group fn_form-group"
+      ng-class="app.tags === '' ? 'has-error' : ''"
+    >
+      <input class="form-control" type="text" placeholder="Tags"
+        ng-model="app.tags"
+      >
+    </div>
+    <div class="form-group fn_form-group">
+      <textarea class="form-control" placeholder="Note"></textarea>
+    </div>
+
+    <div class="fn_notes">
+      <div
+        class="fn_note"
+        ng-repeat="note in app.notes track by $index"
+      >
+      <div>{{note.date}}</div>
+      <div>{{note.data}}</div>
+      </div>
+    </div>
+
+    <pre>{{app | json}}</pre>
+  </div>
+
+  <!-- libs -->
+  <!-- include: "type": "js", "files": ["libs/angular/*.js", "libs/jquery/*.js", "libs/**/*.js"] -->
+  <!-- src -->
+  <!-- include: "type": "js", "files": ["**/*_module.js", "**/*.js", "!libs/**/*"] -->
+</body>
+</html>
