@@ -45,17 +45,6 @@ module.exports = {
       },
       {
         expand: true,
-        cwd: 'bower_components/bootstrap-bower/',
-        src: [
-          'css/bootstrap.min.css',
-          'css/bootstrap-theme.min.css',
-          'fonts/*'
-        ],
-        dest: 'dist/libs/bootstrap/',
-        filter: 'isFile'
-      },
-      {
-        expand: true,
         cwd: 'bower_components/angular-animate/',
         src: [
           'angular-animate.min.js',
@@ -65,22 +54,23 @@ module.exports = {
         filter: 'isFile'
       },
       {
-        src: 'bower_components/jquery/dist/jquery.min.js',
-        dest: 'dist/libs/jquery/jquery.min.js'
+        expand: true,
+        cwd: 'bower_components/angular-aria/',
+        src: [
+          'angular-aria.min.js',
+          'angular-aria.min.js.map'
+        ],
+        dest: 'dist/libs/angular-aria/',
+        filter: 'isFile'
       },
       {
         expand: true,
-        cwd: 'bower_components/bootstrap-material-design/dist/',
+        cwd: 'bower_components/angular-material/',
         src: [
-          'js/material.min.js',
-          'js/ripples.min.js',
-          'css/material.min.css',
-          //!!'css/material-fullpalette.min.css',
-          'css/ripples.min.css',
-          'css/roboto.min.css',
-          'fonts/*'
+          'angular-material.min.js',
+          'angular-material.min.css'
         ],
-        dest: 'dist/libs/bootstrap-material-design/',
+        dest: 'dist/libs/angular-material/',
         filter: 'isFile'
       }
     ]
