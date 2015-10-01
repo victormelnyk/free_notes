@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Scopia Web Client</title>
+  <title>Free notes</title>
   <meta charset="UTF-8">
   <!-- libs -->
   <!-- include: "type": "css", "files": ["libs/**/*.css"] -->
@@ -23,13 +23,12 @@
     <md-toolbar>
       <div class="md-toolbar-tools">
         <h1>FN</h1>
-        <md-input-container md-theme="input" flex
-          ng-class="app.tags === '' ? 'has-error' : ''"
-        >
-          <label>&nbsp;</label>
-          <input placeholder="Tags" autofocus
+        <md-input-container md-theme="input" flex>
+          <label>Tags</label>
+          <input autofocus
             ng-model="app.tags"
             ng-change="app.onTagsChange()"
+            required
           >
         </md-input-container>
         <md-button
@@ -45,23 +44,17 @@
         <md-card flex="80">
           <md-card-content>
             <md-list>
-              <md-item ng-repeat="note in app.notes track by $index">
-
-                <md-item-content>
-                  <div class="md-tile-left inset" hide-sm>
-                    <user-avatar></user-avatar>
-                  </div>
-                  <div class="md-tile-content">
-                    <h3>{{note.date}}</h3>
-                    <h3>{{note.inProgres}}</h3>
-                    <p>
-                      {{note.data}}
-                    </p>
-                  </div>
-                </md-item-content>
-
+              <md-list-item ng-repeat="note in app.notes track by $index">
+                <div flex>
+                  <small class="md-caption fn_note_date">{{note.inProgres}} {{note.date}}</small>
+                  <p class="md-body-12"
+                    contenteditable="true"
+                    ng-model="note.data"
+                    ng-change="app.onNoteChange(note)"
+                  ></p>
+                </div>
                 <md-divider ng-if="!$last"></md-divider>
-              </md-item>
+              </md-list-item>
             </md-list>
 
           </md-card-content>
@@ -71,49 +64,7 @@
 
   </div>
 
-  <!-- <div class="container fn_container">
-
-    <div class="fn_notes">
-      <div class="fn_note_container"
-        ng-repeat=""
-      >
-        <div class="fn_note"
-          ng-if="note !== app.editedNote"
-        >
-          <span class="fn_date">
-            {{note.date}}
-            <i
-              ng-class="note.inProgres ? 'mdi-action-autorenew' : ''"
-            ></i>
-          </span>
-          <div class="fn_note_date">{{note.data}}</div>
-          <button class="btn btn-default mdi-content-create fn_btm_edit"
-            ng-click="app.editNote(note)"
-          ></button>
-        </div>
-
-        <div class="form-group well fn_edited_note"
-          ng-if="note === app.editedNote"
-        >
-          <span class="fn_date">
-            {{note.date}}
-            <i
-              ng-class="note.inProgres ? 'mdi-action-autorenew' : 'mdi-action-done'"
-            ></i>
-          </span>
-          <textarea class="form-control fn_edited_note_data" placeholder="Note" rows="4"
-            ng-model="app.editedNote.data"
-            ng-change="app.onNoteChange()"
-          ></textarea>
-          <button class="btn btn-default mdi-content-clear fn_btm_edit"
-            ng-click="app.cancelEditNote()"
-          ></button>
-        </div>
-
-      </div>
-    </div> -->
-
-    <!-- <br><br><pre>{{app | json}}</pre> -->
+  <!-- <br><br><pre>{{app | json}}</pre> -->
   </div>
 
   <!-- libs -->

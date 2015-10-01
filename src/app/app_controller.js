@@ -30,14 +30,10 @@ function AppController($window, $log, $interval, $timeout) {
 
   self.notes = [];
 
-  self.editedNote = null;
-
   self.onNoteChange = onNoteChange;
   self.onTagsChange = onTagsChange;
 
-  self.cancelEditNote = cancelEditNote;
   self.createNote = createNote;
-  self.editNote = editNote;
 
   init();
   return self;
@@ -53,19 +49,6 @@ function AppController($window, $log, $interval, $timeout) {
     };
 
     self.notes.unshift(note);
-    self.editedNote = note;
-  }
-
-  function editNote(note) {
-    $log.log('editNote', note);
-
-    self.editedNote = note;
-  }
-
-  function cancelEditNote() {
-    $log.log('cancelEditNote');
-
-    self.editedNote = null;
   }
 
   function getNotes(tags) {
@@ -111,16 +94,15 @@ function AppController($window, $log, $interval, $timeout) {
     }
   }
 
-  function onNoteChange() {
+  function onNoteChange(note) {
     $log.log('onNoteChange');
 
-    saveNote(self.tags, self.editedNote);
+    saveNote(self.tags, note);
   }
 
   function onTagsChange() {
     $log.log('onTagsChange');
 
-    cancelEditNote();
     search(self.tags);
   }
 
