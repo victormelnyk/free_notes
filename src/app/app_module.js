@@ -24,3 +24,9 @@ angular.module('appModule').directive('contenteditable', function() {
     }
   };
 });
+
+angular.module('appModule').config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('blue')
+    .accentPalette('red');
+});
