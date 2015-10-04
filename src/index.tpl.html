@@ -18,9 +18,11 @@
       <div class="md-toolbar-tools">
         <h2 class="fn_logo">FN</h2>
 
-        <!-- <md-input-container class="fn_tags_container" md-no-float > -->
-          <input class="fn_tags" autofocus required placeholder="Tags" ng-model="app.tags" ng-change="app.onTagsChange()" flex>
-        <!-- </md-input-container> -->
+        <md-input-container class="fn_tags_container" md-no-float flex>
+          <input class="fn_tags" autofocus required placeholder="Tags" ng-model="app.tags" ng-change="app.onTagsChange()">
+        </md-input-container>
+
+        <small class="md-caption fn_status">{{app.status}}</small>
 
         <md-button class="md-icon-button" ng-click="app.onTagsChange()">
           <md-icon>refresh</md-icon>

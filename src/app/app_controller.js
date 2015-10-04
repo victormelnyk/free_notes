@@ -4,11 +4,10 @@ angular
     ['$window', '$log', '$interval', '$timeout', AppController]);
 
 function AppController($window, $log, $interval, $timeout) {
-  $log.log('AppController');
+  $log.debug('AppController');
 
   var self = this;
 
-  self.liveSec = 0;
   self.dbNotes = [{
     id: 1,
     tags: ['tag1'],
@@ -27,8 +26,8 @@ function AppController($window, $log, $interval, $timeout) {
   }];
 
   self.tags = '';
-
   self.notes = [];
+  self.status = '';
 
   self.onNoteChange = onNoteChange;
   self.onTagsChange = onTagsChange;
@@ -39,22 +38,24 @@ function AppController($window, $log, $interval, $timeout) {
   return self;
 
   function createNote() {
-    $log.log('createNote');
+    $log.debug('createNote');
 
     var note = {
       id: 0,
       tags: [],
       data: '',
-      date: (new Date).toLocaleString() + ' ' + (new Date).getSeconds()
+      date: ''
     };
 
     self.notes.unshift(note);
   }
 
   function getNotes(tags) {
-    $log.log('getNotes', tags);
+    $log.debug('getNotes', tags);
 
     //!!get from db
+
+    self.status = 'Updating...';
 
     self.notes = [];
 
@@ -76,43 +77,39 @@ function AppController($window, $log, $interval, $timeout) {
         self.notes.push(note);
       }
     }
+
+    self.status = 'All notes saved';
   }
 
   function init() {
-    $log.log('init');
-
-    $interval(function() {
-      self.liveSec++;
-    }, 1000);
-
-    $window.app = self;//!!
+    $log.debug('init');
 
     self.tags = $window.localStorage.getItem('tags');
 
     if (self.tags) {
-      search(self.tags);
+      getNotes(self.tags);
     }
   }
 
   function onNoteChange(note) {
-    $log.log('onNoteChange');
+    $log.debug('onNoteChange');
 
     saveNote(self.tags, note);
   }
 
   function onTagsChange() {
-    $log.log('onTagsChange');
+    $log.debug('onTagsChange', self.tags);
 
-    search(self.tags);
+    search(self.tags || '');
   }
 
   function saveNote(tags, note) {
 
     function onSave() {
-      $log.log('onSave');
+      $log.debug('onSave');
 
       dbNote.id = 7;//!!on db
-      dbNote.date = (new Date).toLocaleString() + ' ' + (new Date).getSeconds();
+      dbNote.date = (new Date).toLocaleString();
 
       note.id = dbNote.id;
       note.tags = dbNote.tags;
@@ -124,9 +121,13 @@ function AppController($window, $log, $interval, $timeout) {
       if (dbNote.data !== note.data) {
         saveNote(tags, note);
       }
+
+      self.status = 'All notes saved';
     }
 
-    $log.log('saveNote', tags, note);
+    $log.debug('saveNote', tags, note);
+
+    self.status = 'Saving...';
 
     if (note.inProgres) {
       return;
@@ -134,7 +135,7 @@ function AppController($window, $log, $interval, $timeout) {
 
     note.inProgres = true;
 
-    $log.log('saveNote to db', tags, note);
+    $log.debug('saveNote to db', tags, note);
 
     var dbNote = {};//!!delete
     angular.copy(note, dbNote);
@@ -145,11 +146,9 @@ function AppController($window, $log, $interval, $timeout) {
   }
 
   function search(tags) {
-    $log.log('search', tags);
+    $log.debug('search', tags);
 
-    tags = tags.trim();
-
-    $window.localStorage.setItem('tags', self.tags);
+    $window.localStorage.setItem('tags', tags);
 
     getNotes(tags);
   }

@@ -1,8 +1,16 @@
 angular.module('appModule', [
-  //!external modules
   'ngMaterial'
-  //!internal modules
 ]);
+
+angular.module('appModule').config(['$logProvider', function($logProvider) {
+  $logProvider.debugEnabled(true);
+}]);
+
+angular.module('appModule').config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default').
+    primaryPalette('blue').
+    accentPalette('red');
+});
 
 angular.module('appModule').directive('contenteditable', function() {
   return {
@@ -23,10 +31,4 @@ angular.module('appModule').directive('contenteditable', function() {
       });
     }
   };
-});
-
-angular.module('appModule').config(function($mdThemingProvider) {
-  $mdThemingProvider.theme('default')
-    .primaryPalette('blue')
-    .accentPalette('red');
 });
