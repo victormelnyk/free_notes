@@ -1,4 +1,5 @@
 angular.module('appModule', [
+  'ngResource',
   'ngMaterial'
 ]);
 

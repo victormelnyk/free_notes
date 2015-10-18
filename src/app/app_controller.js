@@ -1,12 +1,18 @@
 angular
   .module('appModule')
   .controller('AppController',
-    ['$window', '$log', '$interval', '$timeout', AppController]);
+    ['$window', '$log', '$resource', '$interval', '$timeout', AppController]);
 
-function AppController($window, $log, $interval, $timeout) {
+function AppController($window, $log, $resource, $interval, $timeout) {
   $log.debug('AppController');
 
-  var self = this;
+  var
+    self = this,
+    dbNotes = $resource('http://flit.pro:8080/notes', {
+      tags: 'tag1'
+    }, {
+
+    });
 
   self.dbNotes = [{
     id: 1,
@@ -53,32 +59,11 @@ function AppController($window, $log, $interval, $timeout) {
   function getNotes(tags) {
     $log.debug('getNotes', tags);
 
-    //!!get from db
-
     self.status = 'Updating...';
 
-    self.notes = [];
-
-    var tagList = tags.split(' ');
-
-    for (var i = 0; i < self.dbNotes.length; i++) {
-      var
-        note = self.dbNotes[i],
-        isMatched = true;
-
-      for (var j = 0; j < note.tags.length; j++) {
-        if (tagList.indexOf(note.tags[j]) === -1) {
-          isMatched = false;
-          break;
-        }
-      }
-
-      if (isMatched) {
-        self.notes.push(note);
-      }
-    }
-
-    self.status = 'All notes saved';
+    self.notes = dbNotes.query(function() {
+      self.status = 'All notes saved';
+    });
   }
 
   function init() {

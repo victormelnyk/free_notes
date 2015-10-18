@@ -37,8 +37,7 @@ module.exports = {
         expand: true,
         cwd: 'bower_components/angular/',
         src: [
-          'angular.min.js',
-          'angular.min.js.map'
+          'angular.min.js'
         ],
         dest: 'dist/libs/angular/',
         filter: 'isFile'
@@ -47,18 +46,25 @@ module.exports = {
         expand: true,
         cwd: 'bower_components/angular-animate/',
         src: [
-          'angular-animate.min.js',
-          'angular-animate.min.js.map'
+          'angular-animate.min.js'
         ],
         dest: 'dist/libs/angular-animate/',
         filter: 'isFile'
       },
       {
         expand: true,
+        cwd: 'bower_components/angular-resource/',
+        src: [
+          'angular-resource.min.js'
+        ],
+        dest: 'dist/libs/angular-resource/',
+        filter: 'isFile'
+      },
+      {
+        expand: true,
         cwd: 'bower_components/angular-aria/',
         src: [
-          'angular-aria.min.js',
-          'angular-aria.min.js.map'
+          'angular-aria.min.js'
         ],
         dest: 'dist/libs/angular-aria/',
         filter: 'isFile'
