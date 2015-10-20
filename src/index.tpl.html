@@ -37,7 +37,7 @@
       <md-list flex="80">
         <md-list-item class="fn_note" ng-repeat="note in app.notes track by $index">
           <md-whiteframe class="md-whiteframe-2dp md-body-1 fn_data" flex layout-padding
-            contenteditable="true" ng-model="note.data" ng-change="app.onNoteChange(note)"
+            contenteditable="true" ng-model="note.data" ng-change="app.onNoteChange(note)" ng-dblclick="app.deleteNote(note)"
           ></md-whiteframe>
 
           <small class="md-caption fn_date">

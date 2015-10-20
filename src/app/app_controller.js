@@ -8,28 +8,23 @@ function AppController($window, $log, $resource, $interval, $timeout) {
 
   var
     self = this,
-    dbNotes = $resource('http://flit.pro:8080/notes', {
-      tags: 'tag1'
+    dbNote = $resource('http://localhost\\:8080/tags/:tags/notes/:id', {
+      tags: '@tags',
+      id: '@id'
     }, {
-
+      insert: {
+        method: 'POST',
+        params: {
+          data: ''
+        }
+      },
+      update: {
+        method: 'PUT',
+        params: {
+          data: '@data'
+        }
+      }
     });
-
-  self.dbNotes = [{
-    id: 1,
-    tags: ['tag1'],
-    data: 'note1',
-    date: (new Date).toLocaleString()
-  }, {
-    id: 2,
-    tags: ['tag1', 'tag2'],
-    data: 'note2',
-    date: (new Date).toLocaleString()
-  }, {
-    id: 3,
-    tags: ['tag1'],
-    data: 'note3',
-    date: (new Date).toLocaleString()
-  }];
 
   self.tags = '';
   self.notes = [];
@@ -39,6 +34,7 @@ function AppController($window, $log, $resource, $interval, $timeout) {
   self.onTagsChange = onTagsChange;
 
   self.createNote = createNote;
+  self.deleteNote = deleteNote;
 
   init();
   return self;
@@ -46,14 +42,23 @@ function AppController($window, $log, $resource, $interval, $timeout) {
   function createNote() {
     $log.debug('createNote');
 
-    var note = {
-      id: 0,
-      tags: [],
-      data: '',
-      date: ''
-    };
+    var note = new dbNote({
+      tags: self.tags
+    });
+
+    note.$insert();
 
     self.notes.unshift(note);
+  }
+
+  function deleteNote(note) {
+    $log.debug('deleteNote', note);
+
+    note.$delete({
+      tags: self.tags
+    });
+
+    self.notes.splice(self.notes.indexOf(note), 1);
   }
 
   function getNotes(tags) {
@@ -61,7 +66,9 @@ function AppController($window, $log, $resource, $interval, $timeout) {
 
     self.status = 'Updating...';
 
-    self.notes = dbNotes.query(function() {
+    self.notes = dbNote.query({
+      tags: tags
+    }, function() {
       self.status = 'All notes saved';
     });
   }
@@ -93,19 +100,11 @@ function AppController($window, $log, $resource, $interval, $timeout) {
     function onSave() {
       $log.debug('onSave');
 
-      dbNote.id = 7;//!!on db
-      dbNote.date = (new Date).toLocaleString();
-
-      note.id = dbNote.id;
-      note.tags = dbNote.tags;
-      note.date = dbNote.date;
       note.inProgres = false;
 
-      self.dbNotes.unshift(note);
-
-      if (dbNote.data !== note.data) {
+      /*if (dbNote.data !== note.data) {
         saveNote(tags, note);
-      }
+      }*/
 
       self.status = 'All notes saved';
     }
@@ -114,20 +113,19 @@ function AppController($window, $log, $resource, $interval, $timeout) {
 
     self.status = 'Saving...';
 
-    if (note.inProgres) {
+    /*if (note.inProgres) {
       return;
-    }
+    }*/
 
     note.inProgres = true;
 
     $log.debug('saveNote to db', tags, note);
 
-    var dbNote = {};//!!delete
-    angular.copy(note, dbNote);
-    dbNote.tags = [];
-    dbNote.tags.push(tags);//!!onli one tag
+    note.$update({
+      tags: tags
+    });
 
-    $timeout(onSave, 5000);
+    //$timeout(onSave, 5000);
   }
 
   function search(tags) {
