@@ -53,15 +53,15 @@
         </md-list-item>
 
         <md-list-item class="fn_note" ng-repeat="note in app.notes track by $index">
-          <md-whiteframe class="md-whiteframe-2dp md-body-1 fn_data" flex layout-padding
-            contenteditable="true" ng-model="note.data" ng-change="app.onNoteChange(note)" ng-dblclick="app.deleteNote(note)"
-          ></md-whiteframe>
-
           <small class="md-caption fn_date">
             <md-icon class="fn_in_progres" title="Saving" ng-show="note.inProgres">mode_edit</md-icon>
             {{note.date}}
             <span title="Edited"></span>
           </small>
+          <!--! should not be the first for work spaces in contenteditable -->
+          <md-whiteframe class="md-whiteframe-2dp md-body-1 fn_data" flex layout-padding
+            contenteditable="true" ng-model="note.data" ng-change="app.onNoteChange(note)" ng-dblclick="app.deleteNote(note)"
+          ></md-whiteframe>
         </md-list-item>
 
       </md-list>

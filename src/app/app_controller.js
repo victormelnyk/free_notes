@@ -20,14 +20,18 @@ function AppController($window, $log, $resource, $interval, $timeout) {
     }, {
       insert: {
         method: 'POST',
-        params: {
-          data: ''
+        transformRequest: function(data, headersGetter) {
+          return JSON.stringify({
+            data: data.data || ''
+          });
         }
       },
       update: {
         method: 'PUT',
-        params: {
-          data: '@data'
+        transformRequest: function(data, headersGetter) {
+          return JSON.stringify({
+            data: data.data
+          });
         }
       }
     }),
