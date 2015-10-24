@@ -16,7 +16,7 @@
   <div layout="column" style="height: 100%">
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2 class="fn_logo">FN</h2>
+        <h2 class="fn_logo" title="Free notes">FN</h2>
 
         <md-input-container class="fn_tags_container" md-no-float flex>
           <input class="fn_tags" autofocus required placeholder="Tags" ng-model="app.tags" ng-change="app.onTagsChange()">
@@ -24,17 +24,34 @@
 
         <small class="md-caption fn_status">{{app.status}}</small>
 
-        <md-button class="md-icon-button" ng-click="app.onTagsChange()">
+        <md-button class="md-icon-button" ng-disabled="!app.tags" ng-click="app.onTagsChange()">
           <md-icon>refresh</md-icon>
         </md-button>
-        <md-button class="md-icon-button" ng-click="app.onTagsChange()">
+        <!-- !!<md-button class="md-icon-button" ng-click="app.onTagsChange()">
           <md-icon>more_vert</md-icon>
-        </md-button>
+        </md-button> -->
       </div>
     </md-toolbar>
 
     <md-content class="fn_content" flex md-scroll-y layout="row" layout-align="center" layout-padding>
       <md-list flex="80">
+
+        <md-list-item ng-if="!app.tags">
+          <md-toolbar class="md-warn">
+            <h2 class="md-toolbar-tools">
+              <span class="md-flex">Enter the tags to start working</span>
+            </h2>
+          </md-toolbar>
+        </md-list-item>
+
+        <md-list-item ng-if="app.tags && !app.notes.length">
+          <md-toolbar class="md-warn md-hue-3">
+            <h2 class="md-toolbar-tools">
+              <span class="md-flex">Notes you add appear here</span>
+            </h2>
+          </md-toolbar>
+        </md-list-item>
+
         <md-list-item class="fn_note" ng-repeat="note in app.notes track by $index">
           <md-whiteframe class="md-whiteframe-2dp md-body-1 fn_data" flex layout-padding
             contenteditable="true" ng-model="note.data" ng-change="app.onNoteChange(note)" ng-dblclick="app.deleteNote(note)"
@@ -46,6 +63,7 @@
             <span title="Edited"></span>
           </small>
         </md-list-item>
+
       </md-list>
     </md-content>
 
@@ -54,8 +72,6 @@
     </md-button>
 
   </div>
-  <!-- <br><br><pre>{{app | json}}</pre> -->
-
   <!-- libs -->
   <!-- include: "type": "js", "files": ["libs/angular/*.js", "libs/**/*.js"] -->
   <!-- src -->

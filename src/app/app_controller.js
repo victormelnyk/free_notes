@@ -8,6 +8,12 @@ function AppController($window, $log, $resource, $interval, $timeout) {
 
   var
     self = this,
+    statusTypes = {
+      enterTags: 'Enter tags',
+      updating: 'Updating...',
+      saving: 'Saving...',
+      allSaved: 'All notes saved'
+    },
     dbNote = $resource('http://localhost\\:8080/tags/:tags/notes/:id', {
       tags: '@tags',
       id: '@id'
@@ -24,11 +30,12 @@ function AppController($window, $log, $resource, $interval, $timeout) {
           data: '@data'
         }
       }
-    });
+    }),
+    updateTimer = null;
 
   self.tags = '';
   self.notes = [];
-  self.status = '';
+  self.status = statusTypes.enterTags;
 
   self.onNoteChange = onNoteChange;
   self.onTagsChange = onTagsChange;
@@ -42,11 +49,18 @@ function AppController($window, $log, $resource, $interval, $timeout) {
   function createNote() {
     $log.debug('createNote');
 
+    self.status = statusTypes.saving;
+
     var note = new dbNote({
       tags: self.tags
     });
 
-    note.$insert();
+    note.inProgres = true;
+
+    note.$insert(function() {
+      note.inProgres = false;
+      self.status = statusTypes.allSaved;
+    });
 
     self.notes.unshift(note);
   }
@@ -64,12 +78,18 @@ function AppController($window, $log, $resource, $interval, $timeout) {
   function getNotes(tags) {
     $log.debug('getNotes', tags);
 
-    self.status = 'Updating...';
+    if (!tags) {
+      self.notes = [];
+      self.status = statusTypes.enterTags;
+      return;
+    }
+
+    self.status = statusTypes.updating;
 
     self.notes = dbNote.query({
       tags: tags
     }, function() {
-      self.status = 'All notes saved';
+      self.status = statusTypes.allSaved;
     });
   }
 
@@ -97,35 +117,25 @@ function AppController($window, $log, $resource, $interval, $timeout) {
 
   function saveNote(tags, note) {
 
-    function onSave() {
-      $log.debug('onSave');
+    function saveNoteToDb() {
+      $log.debug('saveNote to db', tags, note);
 
-      note.inProgres = false;
+      self.status = statusTypes.saving;
 
-      /*if (dbNote.data !== note.data) {
-        saveNote(tags, note);
-      }*/
-
-      self.status = 'All notes saved';
+      note.$update({
+        tags: tags
+      }, function() {
+        note.inProgres = false;
+        self.status = statusTypes.allSaved;
+      });
     }
 
     $log.debug('saveNote', tags, note);
 
-    self.status = 'Saving...';
-
-    /*if (note.inProgres) {
-      return;
-    }*/
-
     note.inProgres = true;
 
-    $log.debug('saveNote to db', tags, note);
-
-    note.$update({
-      tags: tags
-    });
-
-    //$timeout(onSave, 5000);
+    $timeout.cancel(updateTimer);
+    updateTimer = $timeout(saveNoteToDb, 1000);
   }
 
   function search(tags) {
